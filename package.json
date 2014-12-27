@@ -1,0 +1,21 @@
+{
+  "name": "instant.watch",
+  "version": "0.0.0",
+  "description": "Movies, Search and Discovery",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/headrun/instant.watch.git"
+  },
+  "author": "Headrun",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/headrun/instant.watch/issues"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5"
+  }
+}

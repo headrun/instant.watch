@@ -1,0 +1,15 @@
+*.swp
+*.swo
+*.swn
+*.swm
+*.pyc
+*.pyo
+node_modules
+.DS_Store
+bower_components
+bin
+include
+lib
+local
+node_modules
+app/web/migrations
