@@ -1,4 +1,4 @@
 instant.watch
 =============
 
-Movies - Search and Discovery
+Movies/TV Shows/Sports - Search and Discovery
