@@ -7,11 +7,11 @@
     "url": "git://github.com/headrun/instant.watch.git"
   },
   "author": "Headrun",
-  "license": "BSD-2-Clause",
   "bugs": {
     "url": "https://github.com/headrun/instant.watch/issues"
   },
   "devDependencies": {
-    "grunt": "~0.4.5"
+    "grunt": "~0.4.5",
+    "aws-sdk": "~2.1.4"
   }
 }

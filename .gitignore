@@ -13,3 +13,4 @@ lib
 local
 node_modules
 app/web/migrations
+app/app/static/lib
