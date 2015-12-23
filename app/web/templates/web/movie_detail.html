@@ -1,0 +1,24 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <h2>{{ name }}</h2>
+        <p>Year : {{ year_of_release }}</p>
+        {% for lang in language%}
+        <p>Language : {{ lang }}</p>
+        {% endfor %}
+        <p>Duration : {{ duration }} min</p>
+        <p>Genres </p>
+        {% for gen in genre %}
+        <li>{{ gen }}</li>
+        {% endfor %}
+        <p>Fan acceptance - {{ fan_rating }} %</p>
+        <p>facebook :{{ facebook_link }}</p>
+        <p>Rating - {{ rating }}</p>
+        <p>Synopsys : {{ synopsys}}</p>
+        {% for movies in similar_movies %}
+        <li><a href="/web/details/{{movies.id }}/">{{movies.name }}</a></li>
+         <p>{{ movies.year }}</p>
+         {% endfor%}
+    </body>
+</html>

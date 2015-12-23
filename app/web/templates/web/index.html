@@ -1,0 +1,26 @@
+<html>
+<head>
+
+</head>
+<body>
+<h2>Trending Movies </h2>
+{% for movies in movieses %}
+
+<li><a href="/web/details/{{movies.id }}/">{{movies.name }}</a></li>
+<p>{{ movies.year }}</p>
+
+
+{% endfor %}
+
+
+<h2> Trending Series </h2>
+{% for series in serieses %}
+
+<li>{{ series }}
+
+{% endfor %}
+
+{{ image }}
+</body>
+</html>
+

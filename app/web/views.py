@@ -104,7 +104,9 @@ def detail_movies(request,movie_id):
     service_id =str(1063353154)
     year1 =datetime.datetime.now().year
     params = {'serviceId': service_id, 'by': -year1}
-    # code for information about movie
+    pdb.set_trace()
+
+# code for information about movie
  
     url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie?id="+movie_id+"&in=en-US&in2=en-*&in3=*"
     data_about_movie = requests.get("%s?%s" % (url, params ), verify=False)
@@ -124,9 +126,9 @@ def detail_movies(request,movie_id):
     url ="https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_credits/cast?id="+movie_id+"&in=en-US&in2=en-*&in3=*&page=1&by=role"
     url = url.replace(" ", "")
     casts = requests.get("%s?%s" % (url, params ), verify=False)
-#    casts = casts.json()
-#   for cast in casts['credits']:
-#        casting.append(cast['person']['name'])
+    casts = casts.json()
+    for cast in casts['credits']:
+        casting.append(cast['person']['name'])
  
  # code for information about crew of the movie
     crew = []
@@ -142,17 +144,22 @@ def detail_movies(request,movie_id):
     url = url.replace(" ", "")
     rating_data = requests.get("%s?%s" % (url, params ), verify=False)
     rating_data = rating_data.json()
-#    for ratings in rating_data['rating']:
-#        if ratings['rating']!='None':
-#            rating = ratings['rating']
-#        break
+    for ratings in rating_data['rating']:
+        if ratings['rating']!='None':
+            rating = ratings['rating']
+        break
 
 # code for getting related movie
     url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_related?id="+movie_id+"&relation=similar&in=en-US&in2=en-*&in3=*&page=1"
     url = url.replace(" ", "")
-    data_about_movie = requests.get("%s?%s" % (url, params ), verify=False)
- #Lots of works need to be  done
- 
+    sim_movie = []
+    data_similar_movie = requests.get("%s?%s" % (url, params ), verify=False)
+    data_similar_movie = data_similar_movie.json()
+    
+    for similar_movies in data_similar_movie['related']:
+        dict_similar_movie={'title':similar_movies['content']['title'],'year':similar_movies['content']['year'],'id':similar_movies['content']['ref']['id']}
+        sim_movie.append(dict_similar_movie)
+
 # code for information about synopsis of movie
     url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_synopses/best?id="+movie_id+"&length=short&length2=long&length3=plain&length4=extended&in=en-US&in2=en-*&in3=*"
     url = url.replace(" ", "")
@@ -161,5 +168,5 @@ def detail_movies(request,movie_id):
     synopsys = synopsys_data['synopsis']['synopsis']
 
 
-    context = {'genre':genres,'year_of_release':year_of_release,'name':name,'language':language,'fan_rating':fan_rating,'facebook_link':facebook,'duration':duration,"rating":rating,'synopsys':synopsys}
+    context = {'genre':genres,'year_of_release':year_of_release,'similar_movies':sim_movie,'name':name,'language':language,'fan_rating':fan_rating,'facebook_link':facebook,'duration':duration,"rating":rating,'synopsys':synopsys}
     return render(request,'web/movie_detail.html',context)

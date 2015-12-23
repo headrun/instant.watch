@@ -1,0 +1,79 @@
+import requests
+
+import datetime
+import time
+import md5
+import json
+import pdb
+from django.shortcuts import render
+from django.conf import settings
+
+from tornado.auth import _oauth10a_signature
+from urllib import urlencode
+from urlparse import parse_qsl
+
+CONSUMER_TOKEN  = {"key": "686fa81bea30c4af40903fffca654b6958d29ba0614e90728cd03623c2cc5d29",\
+                   "secret": "a52c32c1af43b321c4a08a265ff996dfd28b2eea72fbaa500fa68129e1792ad4"}
+
+# TMPLS = json.loads(open("templates.json").read())
+
+def get_unique_str():
+
+  date = str(datetime.datetime.now())
+
+  return md5.md5(date).hexdigest()
+
+def oauth_request_parameters(url, consumer_token, parameters={},
+                              method="GET"):
+    """Returns the OAuth parameters as a dict for the given request.
+    parameters should include all POST arguments and query string arguments
+    that will be sent with the request.
+    """
+    base_args = dict(
+        oauth_consumer_key=consumer_token["key"],
+        oauth_signature_method="HMAC-SHA1",
+        oauth_timestamp=str(int(time.time())),
+        oauth_nonce=get_unique_str(),
+        oauth_version="1.0a",
+    )
+    args = {}
+    args.update(base_args)
+    args.update(parameters)
+    signature = _oauth10a_signature(consumer_token, method, url, args)
+    base_args["oauth_signature"] = signature
+
+    return base_args
+
+
+def index(request):
+    service_id =str(1063353154)
+    year1 =datetime.datetime.now().year
+    params = {'serviceId': service_id, 'by': -year1}
+    var = "series"
+    url ="https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/discover_all_trending_video/"+var
+    
+    pdb.set_trace()
+    extraArguments = oauth_request_parameters(url,
+                             CONSUMER_TOKEN,
+                             params)
+
+    params.update(extraArguments)
+    params = urlencode(params)
+
+    resp = requests.get("%s?%s" % (url, params), verify=False)
+
+    
+    resp = resp.json()
+    series = []
+    for element in resp['items']:
+        series.append(element['name'])
+    
+    
+    var = "movies"
+    resp = requests.get("%s?%s" % (url, params), verify=False)
+    resp = resp.json()
+    movies = []
+    for element in resp['items']:
+        movies.append(element['name'])
+    context = {"serieses": series,"movieses":movies}
+    return render(request, 'web/index.html',context)
