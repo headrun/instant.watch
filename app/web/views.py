@@ -81,9 +81,9 @@ def index(request):
     
     print "Movies"
     print "%s?%s" % (url, params)
-    for element in resp['items']:
-        dict1 = {'name':element['name'],'id':element['ref']['id'],'year':element['year']}
-        movies.append(dict1)
+#    for element in resp['items']:
+#        dict1 = {'name':element['name'],'id':element['ref']['id'],'year':element['year']}
+#        movies.append(dict1)
 
 
 # code for image
