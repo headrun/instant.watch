@@ -6,7 +6,7 @@
 <h2>Trending Movies </h2>
 {% for movies in movieses %}
 
-<li><a href="/web/details/{{movies.id }}/">{{movies.name }}</a></li>
+<li><a href="/web/movies/{{movies.id }}/">{{movies.name }}</a></li>
 <p>{{ movies.year }}</p>
 
 
@@ -16,7 +16,9 @@
 <h2> Trending Series </h2>
 {% for series in serieses %}
 
-<li>{{ series }}
+<li><a href="/web/series/{{ series.id }}/">{{ series.name }}</a></li>
+<p>{{ series.year }}</p>
+
 
 {% endfor %}
 
