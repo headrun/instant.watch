@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static%}
-<head> 
+  <head> 
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="{% static 'web/bootstrap.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'web/bootstrap-theme.css' %}">
@@ -10,229 +10,322 @@
     <link rel="stylesheet" type="text/css" id="theme" href="{% static 'web/Official_-_Dark_theme.css' %}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script type="text/javascript" src="{% static 'web/custome1.js' %}"></script>
-</head>
-<body>
+  </head>
+  <body>
 
-<script type="text/javascript">
+    <script type="text/javascript">
  
-</script>
+    </script>
 
-<div class="main-window-region">
- <div id="main-window">
-  <header id="header"><h1>Instant Watch</h1></header>
-   <div class="dragzone" style="width: 90%; height: 60px; z-index: 11;" id="player_drag"></div>
-   <div class="notification_alert" style="display:none"></div>
-   <div id="notification"></div>
-   <div id="changelog-container"></div>
-   <div id="disclaimer-container"></div>
-   <div id="about-container"></div>
-   <div id="help-container"></div>
-   <div id="issue-container"></div>
-   <div id="keyboard-container"></div>
-   <div id="content">
-    <div class="filter-bar-region">
-     <div class="filter-bar">
-      <ul class="nav nav-hor left">
-       <li class="source active showMovies providerinfo" data-toggle="tooltip" data-placement="top" title="YTS">Movies</li>
+    <div class="main-window-region">
+      <div id="main-window">
+        <header id="header"><h1>Instant Watch</h1></header>
+        <div class="dragzone" style="width: 90%; height: 60px; z-index: 11;" id="player_drag"></div>
+        <div class="notification_alert" style="display:none"></div>
+        <div id="notification"></div>
+        <div id="changelog-container"></div>
+        <div id="disclaimer-container"></div>
+        <div id="about-container"></div>
+        <div id="help-container"></div>
+        <div id="issue-container"></div>
+        <div id="keyboard-container"></div>
+        <div id="content">
+          <div class="filter-bar-region">
+            <div class="filter-bar">
+              <ul class="nav nav-hor left">
+                <li class="source active showMovies providerinfo" data-toggle="tooltip" data-placement="top" title="YTS">Movies</li>
+                <li class="source showShows providerinfo" data-toggle="tooltip" data-placement="top" title="TVApi">TV Series</li>
+              </ul>
 
-       <li class="source showShows providerinfo" data-toggle="tooltip" data-placement="top" title="TVApi">TV Series</li>
-
-      </ul>
-
-      <ul id="nav-filters" class="nav nav-hor filters">
-       <li class="dropdown filter types">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-              <span class="value">Types</span>
-              <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-         <li><a href="#" data-value="">Type 1</a></li>
-         <li><a href="#" data-value="">Type 2</a></li>
-         <li><a href="#" data-value="">Type 3</a></li>
-        </ul>
-       </li>
-
-       <li class="dropdown filter genres">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-         <span data-value="" class="value">Genre</span>
-         <span class="caret"></span>
-        </a>
-        <ul class="dropdown-menu">
-         <li><a href="#" data-value="">Genre 1</a></li>
-         <li><a href="#" data-value="">Genre 2</a></li>
-         <li><a href="#" data-value="">Genre 3</a></li>
-        </ul>
-       </li>
-      </ul>
-     </div>
-    </div>
-   </div>
-
-   <div class="filter-bar-region"></div>
- <div class="display_items"> 
-   <div class="list-region list_region_movies hide">
-     <div class="list">
-       <div class="hide">
-         <div class="loading-container">
-           <div class="ball"></div>
-           <div class="ball1"></div>
-         </div>
-       </div>
-       <div class="items clearfix">
-        {% for movies in movieses %}
-         <div class="item">
-           <img class="cover-image" src="/static/web/images/posterholder.png" />
-           <div class="cover">
-             <div class="cover-overlay">
-               <i class="fa fa-hieart actions-favorites tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show": "800", "hide": "100" }'>{{movies.name }}</i>
-               <i class="fa fa-eye actions-watched tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show": "800", "hide": "100" }'>{{movies.name }}</i>
-               <div class="rating" >
-                 <div class="rating-stars">
-                   <i class="fa fa-star rating-star">4</i>
-                   <i class="fa fa-star fa-stack-1x rating-star-half-empty">{{movies.name }}</i>
-                   <span class = "fa-stack rating-star-half-container">
-                     <i class="fa fa-star-half fa-stack-1x rating-star-half">{{movies.name }}</i>
-                   </span>
-                   <i class="fa fa-star rating-star-empty">4</i>
-                 </div>
-                 <div class="rating-value">4.5</div>
-               </div>
-             </div>
-           </div>
-
-           <p class="title" title="rovi">{{movies.name }}</p>
-           <p class="year">{{movies.year }}</p>
-           <p class="seasons data"></p>
-           <p class="seasons"></p>
-           <p id="movie_quality" class="seasons quality" style="display: block;"></p>
-         </div>
-        {% endfor %}
-       </div>
-     </div>
-   </div>
-
-   <div class="list-region list_region_series show">
-       <div class="list">
-         <div class="spinner hide">
-           <div class="loading-container">
-             <div class="ball"></div>
-             <div class="ball1"></div>
-           </div>
-         </div>
-         <div class="items clearfix">
-          {% for series in serieses %}
-           <div class="item">
-             <img class="cover-image" src="/static/web/images/posterholder.png" />
-             <div class="cover">
-               <div class="cover-overlay">
-                 <i class="fa fa-hieart actions-favorites tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show":     "800", "hide": "100" }'>{{ series }}</i>
-                 <i class="fa fa-eye actions-watched tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show": "800    ", "hide": "100" }'>{{ series }}</i>
-                 <div class="rating" >
-                   <div class="rating-stars">
-                     <i class="fa fa-star rating-star">4</i>
-                     <i class="fa fa-star fa-stack-1x rating-star-half-empty">{{ series }}<</i>
-                     <span class = "fa-stack rating-star-half-container">
-                       <i class="fa fa-star-half fa-stack-1x rating-star-half">{{ series }}<</i>
-                     </span>
-                     <i class="fa fa-star rating-star-empty">4</i>
-                   </div>
-                   <div class="rating-value">4.5</div>
-                 </div>
-               </div>
-             </div>
-             <p class="title" title="rovi">{{ series }}</p>
-             <p class="year">1990</p>
-             <p class="seasons data"></p>
-             <p class="seasons"></p>
-            <p id="movie_quality" class="seasons quality" style="display: block;"></p>
+              <ul id="nav-filters" class="nav nav-hor filters">
+                <li class="dropdown filter types">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span class="value">Types</span>
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#" data-value="">Type 1</a></li>
+                    <li><a href="#" data-value="">Type 2</a></li>
+                    <li><a href="#" data-value="">Type 3</a></li>
+                  </ul>
+                </li>
+                <li class="dropdown filter genres">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span data-value="" class="value">Genre</span>
+                    <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a href="#" data-value="">Genre 1</a></li>
+                    <li><a href="#" data-value="">Genre 2</a></li>
+                    <li><a href="#" data-value="">Genre 3</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
           </div>
-         {% endfor %}
         </div>
-      </div>
-    </div>
-  </div>
 
-   <div id="settings-container"></div>
+        <div class="display_items"> 
+          <div class="list-region list_region_movies show">
+            <div class="list">
+              <div class="hide">
+                <div class="loading-container">
+                  <div class="ball"></div>
+                  <div class="ball1"></div>
+                </div>
+              </div>
+              <div class="items clearfix">
+                {% for movies in movieses %}
+                <div class="item" data-id =" {{ movies.id }}">
+                  <img class="cover-image" src="/static/web/images/posterholder.png" />
+                  <div class="cover">
+                    <div class="cover-overlay">
+                      <i class="fa fa-hieart actions-favorites tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show": "800", "hide": "100" }'>{{movies.name }}</i>
+                      <i class="fa fa-eye actions-watched tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show": "800", "hide": "100" }'>{{movies.name }}</i>
+                      <div class="rating" >
+                        <div class="rating-stars">
+                          <i class="fa fa-star rating-star">4</i>
+                          <i class="fa fa-star fa-stack-1x rating-star-half-empty">{{movies.name }}</i>
+                          <span class = "fa-stack rating-star-half-container">
+                            <i class="fa fa-star-half fa-stack-1x rating-star-half">{{movies.name }}</i>
+                          </span>
+                          <i class="fa fa-star rating-star-empty">4</i>
+                        </div>
+                        <div class="rating-value">4.5</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p class="title" title="{{movies.name }}">{{movies.name }}</p>
+                  <p class="year">{{movies.year }}</p>
+                  <p class="seasons data"></p>
+                  <p class="seasons"></p>
+                  <p id="movie_quality" class="seasons quality" style="display: block;"></p>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          <div class="list-region list_region_series hide">
+            <div class="list">
+              <div class="spinner hide">
+                <div class="loading-container">
+                  <div class="ball"></div>
+                  <div class="ball1"></div>
+                </div>
+              </div>
+              <div class="items clearfix">
+                {% for series in serieses %}
+                <div class="item" data-id = "{{ series.id }}">
+                  <img class="cover-image" src="/static/web/images/posterholder.png" />
+                  <div class="cover">
+                    <div class="cover-overlay">
+                      <i class="fa fa-hieart actions-favorites tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show":     "800", "hide": "100" }'>{{ series.name }}</i>
+                      <i class="fa fa-eye actions-watched tooltipped" data-toggle="tooltip" data-placement="auto bottom" data-delay='{ "show": "800    ", "hide": "100" }'>{{ series.name }}</i>
+                      <div class="rating" >
+                        <div class="rating-stars">
+                          <i class="fa fa-star rating-star">4</i>
+                          <i class="fa fa-star fa-stack-1x rating-star-half-empty">{{ series.name }}</i>
+                          <span class = "fa-stack rating-star-half-container">
+                            <i class="fa fa-star-half fa-stack-1x rating-star-half">{{ series.name }}</i>
+                          </span>
+                          <i class="fa fa-star rating-star-empty">4</i>
+                        </div>
+                        <div class="rating-value">4.5</div>
+                      </div>
+                    </div>
+                  </div>
+                  <p class="title" title="{{ series.name }}">{{ series.name }}</p>
+                  <p class="year">{{ series.year }}</p>
+                  <p class="seasons data"></p>
+                  <p class="seasons"></p>
+                  <p id="movie_quality" class="seasons quality" style="display: block;"></p>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings-container"></div>
 <!-- movie details -->
 
-   <div id="movie-detail" class="movie-detail hide">
+        <div id="movie-detail" class="movie-detail hide">
+          <div data-bgr="" class="backdrop"></div>
+          <div class="backdrop-overlay"></div>
+          <div class="fa fa-times close-icon"></div>
+          <section class="poster-box">
+            <img src="images/posterholder.png" data-cover=" " class="mcover-image" />
+          </section>
 
-    <div data-bgr="" class="backdrop"></div>
+          <section class="content-box">
+            <div class="meta-container">
+              <div class="title">movie</div>
+              <div class="metadatas">
+                <div class="metaitem">2015</div>
+                <div class="dot"></div>
+                <div class="metaitem">190 min</div>
+                <div class="dot"></div>
+                <div class="metaitem">genre</div>
+                <div class="dot"></div>
+                <div data-toggle="tooltip" data-placement="top" title="Open IMDb page" class="movie-imdb-link"></div>
+                <div class="dot"></div>
+                <div class="rating-container">
+                  <div class="star-container" data-toggle="tooltip" data-placement="right" title="rating/10">
+                    <i class="fa fa-star rating-star"></i>
+                    <span class = "fa-stack rating-star-half-container">
+                      <i class="fa fa-star fa-stack-1x rating-star-half-empty"></i>
+                      <i class="fa fa-star-half fa-stack-1x rating-star-half"></i>
+                    </span>
+                    <i class="fa fa-star rating-star-empty"></i>
+                  </div>
+                  <div class="number-container hidden">7 <em>/10</em></div>
+                </div>
+                <div data-toggle="tooltip" data-placement="left" title="Health false class fa fa-circle health-icon health"></div>
+                <div data-toogle="tooltip" data-placement="left" title="Magnet link" class="fa fa-magnet magnet-link"></div>
 
-    <div class="backdrop-overlay"></div>
+              </div>
 
-    <div class="fa fa-times close-icon"></div>
-
-    <section class="poster-box">
-      <img src="images/posterholder.png" data-cover=" " class="mcover-image" />
-    </section>
-
-    <section class="content-box">
-      <div class="meta-container">
-        <div class="title">movie</div>
-
-        <div class="metadatas">
-          <div class="metaitem">2015</div>
-          <div class="dot"></div>
-          <div class="metaitem">190 min</div>
-          <div class="dot"></div>
-          <div class="metaitem">genre</div>
-          <div class="dot"></div>
-          <div data-toggle="tooltip" data-placement="top" title="Open IMDb page" class="movie-imdb-link"></div>
-          <div class="dot"></div>
-          <div class="rating-container">
-            <div class="star-container" data-toggle="tooltip" data-placement="right" title="rating/10">
-              <i class="fa fa-star rating-star"></i>
-              <span class = "fa-stack rating-star-half-container">
-                <i class="fa fa-star fa-stack-1x rating-star-half-empty"></i>
-                <i class="fa fa-star-half fa-stack-1x rating-star-half"></i>
-              </span>
-              <i class="fa fa-star rating-star-empty"></i>
+              <div class="overview">abcdefghijklmno(synopsis)</div>
             </div>
-            <div class="number-container hidden">7 <em>/10</em></div>
-          </div>
-          <div data-toggle="tooltip" data-placement="left" title="Health false" class="fa fa-circle health-icon health"></div>
-          <div data-toogle="tooltip" data-placement="left" title="Magnet link" class="fa fa-magnet magnet-link"></div>
 
-        </div>
+            <div class="bottom-container">
 
-        <div class="overview">abcdefghijklmno(synopsis)</div>
-      </div>
-
-      <div class="bottom-container">
-
-        <div class="favourites-toggle">Add to bookmarks</div>
-        <div class="watched-toggle">Not Seen</div>
-        <div class="sub-dropdown">
-          <div class="sub-flag-icon flag selected-lang none"></div>
-          <div class="sub-dropdown-arrow"></div>
-        </div>                                            
-        <div class="flag-container">
-          <div class="sub-flag-icon flag none" data-lang="none" title="Disabled"></div>
-          <div class="sub-flag-icon flag lang" data-lang="lang" title="nativeName"></div>
-        </div>
+              <div class="favourites-toggle">Add to bookmarks</div>
+              <div class="watched-toggle">Not Seen</div>
+              <div class="sub-dropdown">
+                <div class="sub-flag-icon flag selected-lang none"></div>
+                <div class="sub-dropdown-arrow"></div>
+              </div>                                            
+              <div class="flag-container">
+                <div class="sub-flag-icon flag none" data-lang="none" title="Disabled"></div>
+                <div class="sub-flag-icon flag lang" data-lang="lang" title="nativeName"></div>
+              </div>
         
-     <br>
-       
-        <div class="button dropup" id="player-chooser"></div>
-      
-        <div id="watch-trailer" class="button">Watch Trailer</div>
-        <div class="movie-quality-container">
-          <div class="q720">720p</div>
-          <div class="q1080">1080p</div>
-          <div class="quality switch white">
-            <input data-toogle="tooltip" data-placement="top" title="720p - <br>1080p - " type="radio" name="switch" id="switch-hd-off" >
-            <input data-toogle="tooltip" data-placement="top" title="720p - <br>1080p - " type="radio" name="switch" id="switch-hd-on" checked>
-            <span class="toggle"></span>
-          </div>
-          <div data-toogle="tooltip" data-placement="top" title="720p" class="q720">720p</div>
-          <div data-toogle="tooltip" data-placement="top" title="1080p" class="q720">1080p</div>
+      <br>
+        
+              <div class="button dropup" id="player-chooser"></div>
+              <div id="watch-trailer" class="button">Watch Trailer</div>
+              <div class="movie-quality-container">
+                <div class="q720">720p</div>
+                <div class="q1080">1080p</div>
+                <div class="quality switch white">
+                  <input data-toogle="tooltip" data-placement="top" title="720p - <br>1080p" >
+                  <input data-toogle="tooltip" data-placement="top" title="720p - <br>1080p - " type="radio" name="switch" id="switch-hd-on" checked >
+                  <span class="toggle"></span>
+                </div>
+                <div data-toogle="tooltip" data-placement="top" title="720p" class="q720">720p</div>
+                <div data-toogle="tooltip" data-placement="top" title="1080p" class="q720">1080p</div>
+              </div>
+            </div>
+          </section>
         </div>
 
-      </div>
-    </section> 
+<!-- series details -->
 
-   </div>
+        <div class="shows-container-contain hide">
+          <div class="fa fa-times close-icon"></div>
+          <div class="tv-poster">
+            <div data-bgr="" class="tv-poster-background">
+              <div class="tv-poster-overlay"></div>
+            </div>
+            <div data-bgr=">" class="tv-cover"></div>
+            <div class="tv-meta-data">
+              <div class="tv-title">Title</div>
+              <div class="tv-year"> 2015</div>
+              <div class="tv-dot"></div>
+              <div class="tv-runtime"> 150 min</div>
+              <div class="tv-dot"></div>
+              <div class="tv-status"> undefined </div>
+              <div class="tv-dot"></div>
+              <div class="tv-genre">action</div>
+              <div class="tv-dot"></div>
+              <div data-toggle="tooltip" data-placement="top" title="Open IMDb page" class="show-imdb-link"></div>
+              <div class="tv-dot"></div>
+              <div class="rating-container-tv">            
+                <div data-toggle="tooltip" data-placement="right" title="5/10" class="star-container-tv">    
+                  <i class="fa fa-star rating-star"></i>  
+                  <span class = "fa-stack rating-star-half-container">
+                    <i class="fa fa-star fa-stack-1x rating-star-half-empty"></i>
+                    <i class="fa fa-star-half fa-stack-1x rating-star-half"></i>
+                  </span>
+                  <i class="fa fa-star rating-star-empty"></i>
+                </div>
+                <div class="number-container-tv hidden"> 4 <em>/10</em></div>
+              </div>
+              <div class="tv-overview">a b c d e f g h i j k l m n o</div>
+              <div class="favourites-toggle">Add to bookmarks</div>
+              <div class="show-watched-toggle">Mark as Seen</div>
+            </div>
+          </div>
+
+          <div class="episode-base">
+            <div class="episode-info">
+              <div class="episode-info-title"></div>
+              <div class="episode-info-number"></div>
+              <div data-toggle="tooltip" data-placement="left" title="Health Unknown" class="fa fa-circle health-icon None"></div>
+              <div data-toggle="tooltip" data-placement="left" title="Magnet link" class="fa fa-magnet show-magnet-link"></div>
+              <div class="episode-info-date"></div>
+              <div class="episode-info-description"></div>
+              <div class="show-quality-container">
+                <div class="quality-selector">
+                  <div id="q480" class="q480">480p</div>
+                  <div id="q720" class="q720">720p</div>
+                  <div id="q1080" class="q1080">1080p</div>
+                </div>
+              </div>
+              <div class="movie-btn-watch-episode">
+                <div class="button dropup" id="player-chooser"></div>
+              </div>
+            </div>
+
+            <div class="display-base-title">
+              <div class="episode-list-seasons">Seasons</div>
+              <div class="episode-list-episodes">Episodes</div>
+            </div>
+            <div class="season-episode-container">
+              <div class="tabs-base">
+                <div class="tabs-seasons">
+                  <ul>
+                    <li class="tab-season" data-tab="season"><a>season1</a></li>
+                    <li class="tab-season" data-tab="season"><a>season2</a></li>
+                    <li class="tab-season" data-tab="season"><a>season3</a></li>
+                    <li class="tab-season" data-tab="season"><a>season4</a></li>
+                    <li class="tab-season" data-tab="season"><a>season5</a></li>
+                  </ul>
+                </div>
+                <div class="tabs-episodes">
+                  <div class="tab-episodes season">
+                    <ul>
+                      <li class="tab-episode" data-id="episodeData.tvdb_id">
+                        <a href="#" class="episodeData">
+                          <span>1</span>
+                          <div><episode1</div>
+                        </a>
+                        <i id="watched" class="fa fa-eye watched">episode1</i>
+
+
+          <-- hidden template so we can save a DB query -->
+                        <div class="episodeData.tvdb_id" style="display:none">
+                          <span class="title">episodeData.title</span>
+                          <span class="date">first_aired</span>
+                          <span class="season">episodeData.season</span>
+                          <span class="episode">episodeData.episode</span>
+                          <span class="overview">episodeData.overview</span>
+                          <span class="q480">q480</span>
+                          <span class="q720">q720</span>
+                          <span class="q1080">q1080</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div><!--End tabs-episode-->
+                </div><!--End tabs-episode-base-->
+              </div><!--End tabs_base-->
+            </div><!--End season-episode-container-->
+          </div>
+        </div>
+<!--
    <div id="file-selector-container"></div>
    <div id="torrent-collection-container"></div>
    <div id="drop-mask"></div>
@@ -243,6 +336,8 @@
    <div id="player"></div>
    </div></div>
 
-
+-->
+  </div> 
+</div>  
 </body>
 </html>

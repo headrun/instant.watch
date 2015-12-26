@@ -53,7 +53,7 @@ def index(request):
 
 #   code for series
     url ="https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/discover_all_trending_video/series"
-    pdb.set_trace()
+   # pdb.set_trace()
 
     extraArguments = oauth_request_parameters(url,
                              CONSUMER_TOKEN,
@@ -82,12 +82,12 @@ def index(request):
     resp = requests.get("%s?%s" % (url, params), verify=False)
     resp = resp.json()
     movies = []
-    try:
-        for element in resp['items']:
+    for element in resp['items']:
+        try:
             dict1 = {'name':element['name'],'id':element['ref']['id'],'year':element['year']}
             movies.append(dict1)
-    except:
-        pass
+        except:
+            pass
 # code for image
     url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/media_image/sized?id=172343929&aspect=3x4&size=large&zoom=std"
     image = requests.get("%s?%s" % (url, params ), verify=False)
@@ -106,7 +106,7 @@ def detail_movies(request,movie_id):
     service_id =str(1063353154)
     year1 =datetime.datetime.now().year
     params = {'serviceId': service_id, 'by': -year1}
-    pdb.set_trace()
+   # pdb.set_trace()
 
 # code for information about movie
  
