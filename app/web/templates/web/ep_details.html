@@ -1,0 +1,19 @@
+<html>
+
+<head>
+
+</head>
+
+<body>
+<h2>{{ name }}</h2>
+<p>{{ year }}</p>
+<p>{{ language }}</p>
+{{ duration }}min
+<p>Genres</p>
+{% for gen in genre %}
+<li>{{ gen }}</li>
+{% endfor %}
+Synopsis -- {{ synopsis }}
+</body>
+
+</html>
