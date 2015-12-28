@@ -36,9 +36,9 @@ $(function(){
     $(".list_region_movies").addClass("show").removeClass("hide");
     $(".showMovies").addClass("active");
    });
-  $(".list-region.list_region_movies > .list > .items > .item > .cover").on("click",function(){
-    $("#movie-detail").removeClass("hide");
-  });
+  function show_movie_details(){
+      $("#movie-detail").removeClass("hide");
+  }
   $(".movie-detail > .close-icon").on("click",function(){
     $("#movie-detail").addClass("hide");
   });
@@ -52,27 +52,58 @@ $(function(){
     $("#movie-detail").addClass("hide");
     $(".shows-container-contain").addClass("hide");
   });
-  $(".list_region_movies .list .items .item").on("click",function(){
-   var id = $(this).attr("data-id");
-   console.log(id);
-  });
 
   $(".tv-cover").css('background-image','url("static/web/images/the-revenant-posters.jpg")');
 
  // $(".tv-poster-background").css('background-image','url("static/web/images/the-revenant-posters.jpg")');
-  $(".list_region_movies .list .items").each(".item",function(){
-    $(this).on("click",function(){
-      var $id = $(this).attr("data-id");
-      console.log("working1");
-      console.log($id);
-      $.ajax({
-        type: "get",
-        url: "web/movies/"+$id+"/",
-        data: $id,
-        success: function(responseData){
-                 console.log("success");
-              }
-      });
+  $(".list_region_movies .list .items .item").on("click",function(){
+    var id = parseInt($(this).attr("data-id"));
+    $(".list_region_movies .list .spinner").removeClass("hide");
+    console.log("working1");
+    console.log(id);
+    $.ajax({
+      type: "post",
+      url: "movies/",
+      data: { "send_data":id,
+              csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+      success: function(Data){
+               console.log("success");
+               $(".movie-detail .content-box .meta-container .title").text(Data["name"]);
+               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(0).text(Data["year_of_release"]);
+               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(1).text(Data["duration"]+" min");
+               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(2).text(Data["genre"]);
+               $(".movie-detail .content-box .meta-container .overview").text(Data["synopsys"]);
+               $(".list_region_movies .list .spinner").addClass("hide");
+               show_movie_details();
+            }
     });
   });
+
+
+  function getCookie(name){
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+
+        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+          }
+        }
+      }
+    return cookieValue;
+  }
+
+  $.ajaxSetup({ 
+    beforeSend: function(xhr, settings) {
+      if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+      } 
+  }); 
  });

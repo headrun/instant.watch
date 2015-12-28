@@ -2,6 +2,9 @@
 *.swo
 *.swn
 *.swm
+*.swi
+*.swk
+*.swl
 *.pyc
 *.pyo
 node_modules
