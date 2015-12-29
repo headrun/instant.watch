@@ -6,30 +6,33 @@ from src import *
 # -------------------------------------------------------------------------------------------------------------------
 def index(request):
 
-#   code for series
-    series = trending_series()
+    return render(request, 'web/index.html')
 
-# code for movies
+#---------------------------------------------------------------------------------------------------------------------
+
+def list_movies(request):
     movies = trending_movies()
+    return HttpResponse(json.dumps(movies),content_type='application/json')
 
-    context = {"serieses": series,"movieses":movies}
-    return render(request, 'web/index.html',context)
+#-----------------------------------------------------------------------------------------------------------------
+
+def list_series(request):
+    series = trending_series()
+    return HttpResponse(json.dumps(series),content_type='application/json')
 
 # ----------------------------------------------------------------------------------------------------------------------
 def detail_movies(request,movie_id):
 
     data = movie_detail(movie_id)
-    #return HttpResponse(json.dumps(data),content_type='application/json')
-    return render(request,'web/movie_detail.html',data)
+    return HttpResponse(json.dumps(data),content_type='application/json')
 
 #----------------------------------------------------------------------------------------------------------------------
 
 def detail_series(request, series_id):
 
     data = series_detail(series_id)
-    #return HttpResponse(json.dumps(data),content_type='application/json')
-    return render(request,'web/series_detail.html',data)
-
+    return HttpResponse(json.dumps(data),content_type='application/json')
+    
 #-----------------------------------------------------------------------------------------------------------------
 def list_episode(request,season_id):
 
