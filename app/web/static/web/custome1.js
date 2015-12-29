@@ -19,91 +19,183 @@ $(function(){
 //    console.log("item wid:"+item_wid+"row width:"+row_wid+"margin left:"+add_margin+"add:"+padding);
   }
 
-  myFunction();
 
   $(window).resize(function(){ myFunction();});
+
+  show_movies();
 
   $(".showShows").on("click",function(){
     $(".showMovies").removeClass("active") ;
     $(".list_region_movies").addClass("hide").removeClass("show");
-    $(".list_region_series").addClass("show").removeClass("hide");
+    show_series();
     $(".showShows").addClass("active");
   });
 
   $(".showMovies").on("click",function(){
     $(".showShows").removeClass("active");
     $(".list_region_series").addClass("hide").removeClass("show");
-    $(".list_region_movies").addClass("show").removeClass("hide");
+    show_movies();
     $(".showMovies").addClass("active");
    });
+
   function show_movie_details(){
-      $("#movie-detail").removeClass("hide");
+      $(".movie-detail").removeClass("hide");
   }
-  $(".movie-detail > .close-icon").on("click",function(){
-    $("#movie-detail").addClass("hide");
+
+  $("body").on("click",".close-icon",function(){
+    $(".movie-detail").addClass("hide");
+    $(".shows-container-contain").addClass("hide");
   });
-  $(".list-region.list_region_series > .list > .items > .item").on("click",function(){
+
+  function show_series_details(){
     $(".shows-container-contain").removeClass("hide");
-  });
+  }
   $(".shows-container-contain > .close-icon").on("click",function(){
     $(".shows-container-contain").addClass("hide");
   });
-  $(".nav.nav-hor.left").on("click",function(){
+
+  $("body").on("click",".nav.nav-hor.left",function(){
     $("#movie-detail").addClass("hide");
     $(".shows-container-contain").addClass("hide");
   });
 
-  $(".tv-cover").css('background-image','url("static/web/images/the-revenant-posters.jpg")');
 
- // $(".tv-poster-background").css('background-image','url("static/web/images/the-revenant-posters.jpg")');
-  $(".list_region_movies .list .items .item").on("click",function(){
+
+ /* movie  details */
+
+  $("body").on("click", ".list_region_movies .item",function(){
+    console.log("click");
     var id = parseInt($(this).attr("data-id"));
-    $(".list_region_movies .list .spinner").removeClass("hide");
-    console.log("working1");
-    console.log(id);
-    $.ajax({
-      type: "post",
-      url: "movies/",
-      data: { "send_data":id,
-              csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-      success: function(Data){
-               console.log("success");
-               $(".movie-detail .content-box .meta-container .title").text(Data["name"]);
-               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(0).text(Data["year_of_release"]);
-               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(1).text(Data["duration"]+" min");
-               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(2).text(Data["genre"]);
-               $(".movie-detail .content-box .meta-container .overview").text(Data["synopsys"]);
-               $(".list_region_movies .list .spinner").addClass("hide");
-               show_movie_details();
-            }
-    });
+    movie_details(id);
   });
 
 
-  function getCookie(name){
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-
-        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-          }
-        }
+  function movie_details(id){
+    var show = "#details"+"_"+id;
+    var div_id = "details"+"_"+id;
+    if ( $(show).length > 0){
+      $(show).removeClass("hide");
       }
-    return cookieValue;
-  }
+    else{
+      $(".list_region_movies .spinner").removeClass("hide");
+      $.ajax({
+        type: "post",
+        url: "movies/"+id+"/",
+        data: { "send_data":id,
+              },
+        success: function(Data){
+                 console.log("success");
+                 var templateRawText = $("#show_movie_details").html();
+                 var compiledTemplate = _.template(templateRawText);
+                 var templateResult = compiledTemplate({"movie":Data.name,"year":Data.year_of_release,"duration":Data.duration,"genre":Data.genre,"synopsis":Data.synopsys,"div":div_id});
+                 var x = $(templateResult);
+                 $("#mv").append(x);
+                 $(".list_region_movies .spinner").addClass("hide");
+                 console.log(templateResult);
 
-  $.ajaxSetup({ 
-    beforeSend: function(xhr, settings) {
-      if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-             // Only send the token to relative URLs i.e. locally.
-        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-      } 
-  }); 
+                 show_movie_details();
+              }
+      });
+    }
+  }
+  /*series details */
+  $("body").on("click",".list_region_series .item",function(){
+    var id = parseInt($(this).attr("data-id"));
+    console.log(id)
+    series_details(id);
+  });
+  function series_details(id){
+    var show = "#details"+"_"+id;
+    var div_id = "details"+"_"+id;
+    if( $(show).length > 0){
+      $(show).removeClass("hide");
+      }
+    else{
+      $(".list_region_series .spinner").removeClass("hide");
+      $.ajax({
+        type: "post",
+        url: "tvseries/"+id+"/",
+        data: { "send_data":id,
+              },
+        success: function(Data){
+          console.log("success");
+          console.log(Data);
+          var templateRawText = $("#series_detail").html();
+          var compiledTemplate = _.template(templateRawText);
+          var templateResult = compiledTemplate({"name":Data.name,"synopsys":Data.synopsis,"div":div_id,"genre":Data.genre});
+          var x = $(templateResult);
+          $(".list_region_series .spinner").addClass("hide");
+          $("#sr").append(x);
+          show_series_details();
+          console.log(x);
+          }
+        });
+      }
+    } 
+
+
+
+  /* display movie_items  */
+  function show_movies(){
+    if ($(".list_region_movies .list .items .item").length > 0){
+      $(".list_region_movies").removeClass("hide");
+    } 
+    else {
+      $(".list_region_movies .spinner").removeClass("hide");
+      $.ajax({
+          type: "post",
+          url: "movies/hot/",
+          data: {"list":"movies"},
+          success: function(Data){
+                  var str = " ";
+                  var i;
+                  for(i=0;i<Data.length;i++){
+                    var templateRawText = $("#movies_list").html();
+                    var compiledTemplate = _.template(templateRawText);
+                    var templateResult = compiledTemplate({name:Data[i].name,"id":Data[i].id,"year":Data[i].year});
+                    str += templateResult;
+                  }
+                  $(".list_region_movies .spinner").addClass("hide");
+                  $(".display_items .list_region_movies .list .items").html(str);
+                }
+      });
+    }
+    console.log("movies shown");
+  }
+  
+/* series_list */
+  function show_series(){
+    if ($(".list_region_series .list .items .item").length > 0){
+      $(".list_region_series").removeClass("hide");
+      }
+    else{
+      $(".list_region_series .spinner").removeClass("hide");
+      $.ajax({
+             type: "post",
+             url: "tvseries/hot/",
+             data: {"list":"series"},
+             success: function(Data){
+                     var str = "";
+                     var i;
+                     for(i=0;i<Data.length;i++){
+                       var templateRawText = $("#series_list").html();
+                       var compiledTemplate = _.template(templateRawText);
+                       var templateResult = compiledTemplate({name:Data[i].name,"id":Data[i].id,"year":Data[i].year});
+                       str += templateResult;
+                     }
+                     $(".list_region_series .spinner").addClass("hide");
+                     $(".display_items .list_region_series .list .items").html(str);
+                     $(".list_region_series").removeClass("hide");
+                   }
+      });
+    }
+    console.log("series shown");
+  }
+//  var templateRawText = $("#movies_list").html();
+//  var compiledTemplate = _.template(templateRawText);
+//  var templateResult = compiledTemplate({name:"titanic","id":123,"year":1994});
+//  $(".display_items .list_region_movies .list .items").html(templateResult);
+ // $(".display_items .list_region_series .list .items").html(templateResult);
+  myFunction();
+
  });
