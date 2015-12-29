@@ -6,9 +6,9 @@ from src import *
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 
-import pdb
 from django.views.decorators.csrf import csrf_exempt
 
+# -------------------------------------------------------------------------------------------------------------------
 def index(request):
 
     return render(request, 'web/main.html')
