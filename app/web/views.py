@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.conf import settings
 import urllib
 from src import *
-
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.views.decorators.csrf import csrf_exempt
 # -------------------------------------------------------------------------------------------------------------------
 def index(request):
 
