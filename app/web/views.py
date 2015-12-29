@@ -12,6 +12,12 @@ from tornado.auth import _oauth10a_signature
 from urllib import urlencode
 from urlparse import parse_qsl
 
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+
+import pdb
+from django.views.decorators.csrf import csrf_exempt
+
 CONSUMER_TOKEN  = {"key": "686fa81bea30c4af40903fffca654b6958d29ba0614e90728cd03623c2cc5d29",\
                    "secret": "a52c32c1af43b321c4a08a265ff996dfd28b2eea72fbaa500fa68129e1792ad4"}
 
@@ -53,7 +59,7 @@ def index(request):
 
 #   code for series
     url ="https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/discover_all_trending_video/series"
-   # pdb.set_trace()
+
 
     extraArguments = oauth_request_parameters(url,
                              CONSUMER_TOKEN,
@@ -64,9 +70,6 @@ def index(request):
 
     resp = requests.get("%s?%s" % (url,params), verify=False)
 
-    print "Series"
-    print "%s?%s" % (url,params)
-    
     resp = resp.json()
     series = []
     for element in resp['items']:
@@ -93,33 +96,39 @@ def index(request):
     image = requests.get("%s?%s" % (url, params ), verify=False)
     
     
-    context = {"serieses": series,"movieses":movies,"image": image}
-    return render(request, 'web/index.html',context)
+    context = {"serieses": series,"movieses":movies,"image": 'image'}
+    return render(request, 'web/main.html',context)
 
 
 def main(request):
     return render(request,'web/main.html')
 
-
-
-def detail_movies(request,movie_id):
+@csrf_exempt
+def detail_movies(request):
+    movie_id = request.POST.get('send_data')
     service_id =str(1063353154)
     year1 =datetime.datetime.now().year
     params = {'serviceId': service_id, 'by': -year1}
-   # pdb.set_trace()
 
 # code for information about movie
  
     url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie?id="+movie_id+"&in=en-US&in2=en-*&in3=*"
     data_about_movie = requests.get("%s?%s" % (url, params ), verify=False)
+    url = url.replace(" ", "")
     data_about_movie = data_about_movie.json()
     genres = data_about_movie['genres']
     name = data_about_movie['title']
     year_of_release = data_about_movie['year']
     language = data_about_movie['spoken']
     fan_rating = data_about_movie['rottenTomatoes']['fan']['score']
-    facebook = data_about_movie['facebooks'][0]['uri']
-    keywords = data_about_movie['keywords']
+    try:
+        facebook = data_about_movie['facebooks'][0]['uri']
+    except:
+        facebook = "Not Available"
+    try:
+        keywords = data_about_movie['keywords']
+    except:
+        pass
     duration = (data_about_movie['runtime']/60)
     
     
@@ -170,5 +179,116 @@ def detail_movies(request,movie_id):
     synopsys = synopsys_data['synopsis']['synopsis']
 
 
-    context = {'genre':genres,'year_of_release':year_of_release,'similar_movies':sim_movie,'name':name,'language':language,'fan_rating':fan_rating,'facebook_link':facebook,'duration':duration,"rating":rating,'synopsys':synopsys}
-    return render(request,'web/movie_detail.html',context)
+    data = {'genre':genres,'year_of_release':year_of_release,'similar_movies':sim_movie,'name':name,'language':language,'fan_rating':fan_rating,'facebook_link':facebook,'duration':duration,"rating":rating,'synopsys':synopsys}
+    return HttpResponse(json.dumps(data),content_type='application/json')
+
+def detail_series(request, series_id):
+    service_id =str(1063353154)
+    year1 =datetime.datetime.now().year
+    params = {'serviceId': service_id, 'by': -year1}
+#    Getting info about series    
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series?id="+ series_id+"&in=en-US&in2=en-*&in3=*"    
+    url = url.replace(" ", "")
+    series_data = requests.get("%s?%s" % (url, params ), verify=False)
+    series_data= series_data.json()
+    title = series_data['title']
+    language = series_data['in']
+    genre = series_data['genres']
+    start_year = series_data['networks'][0]['start']
+    end_year = series_data['networks'][0]['end']
+    network = series_data['networks'][0]['name']
+    facebook = 'None'
+    #facebook = data_about_movie['facebooks'][0]['uri']
+    
+#    Getting info about Rating
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_ratings?id="+ series_id+"&country=US"
+    url = url.replace(" ", "")
+    series_rating = requests.get("%s?%s" % (url, params ), verify=False)
+    series_rating = series_rating.json()
+#    rating = series_rating['rating'][0]['rating']
+
+# Getting synopsis of the series
+
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_synopses/best?id="+ series_id+"&length=short&length2=long&length3=plain&length4=extended&in=en-US&in2=en-*&in3=*"
+    url = url.replace(" ", "")
+    synopsys_data = requests.get("%s?%s" % (url, params ), verify=False)
+    synopsys_data = synopsys_data.json()
+    synopsis = synopsys_data['synopsis']['synopsis']
+
+
+#    Getting info about session
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_seasons?id="+ series_id+"&in=en-US&in2=en-*&in3=*"
+    url = url.replace(" ", "")
+    seasons = []
+    season_data = requests.get("%s?%s" % (url, params ), verify=False)
+    season_data = season_data.json()
+
+    for season in season_data['seasons']:
+        try:
+            season_dict ={'title':season['title'],'id':season['ref']['id'],'start':season['start'],'end':season['end']}
+            seasons.append(season_dict)
+        except:
+            pass
+#    Getting info about casts
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_credits/cast?id="+ series_id+"&page=1&by=role&by2=role&by3=role&by4=role&by5=role&in=en-US&in2=en-*&in3=*"
+    url = url.replace(" ", "")
+    casts_data = requests.get("%s?%s" % (url, params ), verify=False)
+    casts_data = casts_data.json()
+
+#    Getting info about crews
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_credits/crew?id="+ series_id+"&page=1&by=type&by2=type&by3=type&by4=type&by5=type&in=en-US&in2=en-*&in3=*"
+    url = url.replace(" ", "")
+    crews_data = requests.get("%s?%s" % (url, params ), verify=False)
+    crews_data = crews_data.json()
+
+
+    context = {'genre':genre,'name':title,'language':language,'synopsis':synopsis,'start':start_year,'end':end_year,'network':network,'seasons':seasons}
+    return render(request,'web/series_detail.html',context)
+
+
+def list_episode(request,season_id):
+    service_id =str(1063353154)
+    year1 =datetime.datetime.now().year
+    params = {'serviceId': service_id, 'by': -year1}
+    
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_season_episodes?id=914502705&page=1"
+    
+    url = url.replace(" ", "")
+    list_ep = []
+    list_episode = requests.get("%s?%s" % (url, params ), verify=False)
+    list_episode = list_episode.json()
+    
+    for episode in list_episode['episodes']:
+        ep_dict = {'id': episode['ref']['id'] ,'title': episode['title']}
+        list_ep.append(ep_dict)
+    context = {'list_episodes':list_ep}
+    return render(request,'web/list_episode.html',context)
+
+
+def detail_episode(request,episode_id):
+    service_id =str(1063353154)
+    year1 =datetime.datetime.now().year
+    params = {'serviceId': service_id, 'by': -year1}
+#    Information  to display episode datails
+
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_episode?id=906208182&in=en-US&in2=en-*&in3=*"
+    url = url.replace(" ", "")
+    episode_data = requests.get("%s?%s" % (url, params ), verify=False)
+    episode_data = episode_data.json()
+    title = episode_data['title']
+    language = episode_data['in']
+    time = episode_data['year']
+    duration = int(episode_data['runtime'])/60
+    genre = episode_data['genres']
+
+
+# Information to display episode synopsis
+    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_episode_synopses/best?id=906208182&length=short&length2=long&length3=plain&length4=extended&in=en-US&in2=en-*&in3=*"
+    url = url.replace(" ", "")
+    synopsis_data = requests.get("%s?%s" % (url, params ), verify=False)
+    synopsis_data = synopsis_data.json()
+    synopsis = synopsis_data['synopsis']['synopsis']
+
+    context = {'genre':genre,'name':title,'language':language,'synopsis':synopsis,'year':time,'duration':duration} 
+    return render(request,'web/ep_details.html',context)
+

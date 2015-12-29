@@ -23,31 +23,37 @@ $(function(){
 
   $(window).resize(function(){ myFunction();});
 
+  show_movies();
+
   $(".showShows").on("click",function(){
     $(".showMovies").removeClass("active") ;
     $(".list_region_movies").addClass("hide").removeClass("show");
-    $(".list_region_series").addClass("show").removeClass("hide");
+    show_series();
     $(".showShows").addClass("active");
   });
 
   $(".showMovies").on("click",function(){
     $(".showShows").removeClass("active");
     $(".list_region_series").addClass("hide").removeClass("show");
-    $(".list_region_movies").addClass("show").removeClass("hide");
+    show_movies();
     $(".showMovies").addClass("active");
    });
+
   function show_movie_details(){
       $("#movie-detail").removeClass("hide");
   }
+
   $(".movie-detail > .close-icon").on("click",function(){
     $("#movie-detail").addClass("hide");
   });
-  $(".list-region.list_region_series > .list > .items > .item").on("click",function(){
+
+  function show_series_details(){
     $(".shows-container-contain").removeClass("hide");
-  });
+  }
   $(".shows-container-contain > .close-icon").on("click",function(){
     $(".shows-container-contain").addClass("hide");
   });
+
   $(".nav.nav-hor.left").on("click",function(){
     $("#movie-detail").addClass("hide");
     $(".shows-container-contain").addClass("hide");
@@ -55,55 +61,124 @@ $(function(){
 
   $(".tv-cover").css('background-image','url("static/web/images/the-revenant-posters.jpg")');
 
- // $(".tv-poster-background").css('background-image','url("static/web/images/the-revenant-posters.jpg")');
+
+ /* movie  details */
+
   $(".list_region_movies .list .items .item").on("click",function(){
     var id = parseInt($(this).attr("data-id"));
     $(".list_region_movies .list .spinner").removeClass("hide");
     console.log("working1");
     console.log(id);
-    $.ajax({
-      type: "post",
-      url: "movies/",
-      data: { "send_data":id,
-              csrfmiddlewaretoken: '{{ csrf_token }}'
-            },
-      success: function(Data){
-               console.log("success");
-               $(".movie-detail .content-box .meta-container .title").text(Data["name"]);
-               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(0).text(Data["year_of_release"]);
-               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(1).text(Data["duration"]+" min");
-               $(".movie-detail .content-box .meta-container .metadatas .metaitem").eq(2).text(Data["genre"]);
-               $(".movie-detail .content-box .meta-container .overview").text(Data["synopsys"]);
-               $(".list_region_movies .list .spinner").addClass("hide");
-               show_movie_details();
-            }
-    });
+    var show = "#details"+"_"+id;
+    if ( $(show).length() > 0){
+        $(show).removeClass("hide");
+      }
+    else{
+      $.ajax({
+        type: "post",
+        url: "movies/",
+        data: { "send_data":id,
+              },
+        success: function(Data){
+                 console.log("success");
+                 var templateRawText = $(".movie-detail").html();
+                 var compiledTemplate = _.template(templateRawText);
+                 var templateResult = compiledTemplate({name:"titanic","id":123,"year":1994});
+                 $(".movie-detail").html(templateResult);
+                 $(".movie-detail").attr("id",show);
+                 $(".list_region_movies .list .spinner").addClass("hide");
+                 show_movie_details();
+              }
+      });
+    }
+  });
+
+  /*series details */
+
+  $(".list_region_series .list .items .item").on("click",function(){
+     var id = parseInt($(this).attr("data-id"));
+     $(".list_region_series .list .spinner").removeClass("hide");
+     console.log("working1");
+     console.log(id);
+     var show = "#details"+"_"+id;
+     if ( $(show).length() > 0){
+         $(show).removeClass("hide");
+       }
+     else{
+       $.ajax({
+         type: "post",
+         url: "series/",
+         data: { "send_data":id,
+               },
+         success: function(Data){
+                  console.log("success");
+                  var templateRawText = $(".series-detail").html();
+                  var compiledTemplate = _.template(templateRawText);
+                  var templateResult = compiledTemplate({name:"titanic","id":123,"year":1994});
+                  $(".series-detail").html(templateResult);
+                  $(".series-detail").attr("id",show);
+                  $(".list_region_series .list .spinner").addClass("hide");
+                  show_series_details();
+              }
+      });
+    }
   });
 
 
-  function getCookie(name){
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-      var cookies = document.cookie.split(';');
-      for (var i = 0; i < cookies.length; i++) {
-        var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
 
-        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-          break;
-          }
-        }
-      }
-    return cookieValue;
+  /* display movie_items  */
+  function show_movies(){
+    if ($(".list_region_movies .list .items .item").length > 0){
+      $(".list_region_movies").removeClass("hide");
+    } 
+    else {
+      $.ajax({
+          type: "post",
+          url: "movies_list/",
+          data: {"list":"movies"},
+          success: function(Data){
+                  var str = "";
+                  for(i=0;i<Data.length;i++){
+                    var templateRawText = $("#movies_list").html();
+                    var compiledTemplate = _.template(templateRawText);
+                    var templateResult = compiledTemplate({name:"titanic","id":123,"year":1994});
+                    $(".display_items .list_region_movies .list .items").html(templateResult);
+                    str += listHTML;
+                  }
+                  $(".display_items .list_region_movies .list .items").html(listHTML);
+                }
+      });
+    }
   }
-
-  $.ajaxSetup({ 
-    beforeSend: function(xhr, settings) {
-      if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
-             // Only send the token to relative URLs i.e. locally.
-        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-        }
-      } 
-  }); 
+  
+/* series_list */
+  function show_series(){
+    if ($(".list_region_series .list .items .item").length > 0){
+      $(".list_region_series").removeClass("hide");
+      }
+    else{
+      $.ajax({
+             type: "post",
+             url: "series_list/",
+             data: {"list":"series"},
+             success: function(Data){
+                     var str = "";
+                     for(i=0;i<Data.length;i++){
+                       var templateRawText = $("#series_list").html();
+                       var compiledTemplate = _.template(templateRawText);
+                       var templateResult = compiledTemplate({name:"titanic","id":123,"year":1994});
+                       $(".display_items .list_region_series .list .items").html(templateResult);
+                       str += listHTML;
+                     } 
+                     $(".display_items .list_region_series .list .items").html(listHTML);
+                     $(".list_region_series").removeClass("hide");
+                   }
+      });
+    }
+  }
+  var templateRawText = $("#movies_list").html();
+  var compiledTemplate = _.template(templateRawText);
+  var templateResult = compiledTemplate({name:"titanic","id":123,"year":1994});
+  $(".display_items .list_region_movies .list .items").html(templateResult);
+ // $(".display_items .list_region_series .list .items").html(templateResult); 
  });
