@@ -1,13 +1,9 @@
-import requests
-
-import datetime
-import time
-import md5
-import json
-import pdb
 from django.shortcuts import render
 from django.conf import settings
+import urllib
+from src import *
 
+<<<<<<< HEAD
 from tornado.auth import _oauth10a_signature
 from urllib import urlencode
 from urlparse import parse_qsl
@@ -50,14 +46,13 @@ def oauth_request_parameters(url, consumer_token, parameters={},
 
     return base_args
 
+=======
+# -------------------------------------------------------------------------------------------------------------------
+>>>>>>> d57a3be53d0c0fbadf2f0d441c6ac1a16d31d99d
 def index(request):
 
-    service_id =str(1063353154)
-    year1 =datetime.datetime.now().year
-    params = {'serviceId': service_id, 'by': -year1}
-
-
 #   code for series
+<<<<<<< HEAD
     url ="https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/discover_all_trending_video/series"
 
 
@@ -99,10 +94,17 @@ def index(request):
     context = {"serieses": series,"movieses":movies,"image": 'image'}
     return render(request, 'web/main.html',context)
 
+=======
+    series = trending_series()
 
-def main(request):
-    return render(request,'web/main.html')
+# code for movies
+    movies = trending_movies()
+>>>>>>> d57a3be53d0c0fbadf2f0d441c6ac1a16d31d99d
 
+    context = {"serieses": series,"movieses":movies}
+    return render(request, 'web/index.html',context)
+
+<<<<<<< HEAD
 @csrf_exempt
 def detail_movies(request):
     movie_id = request.POST.get('send_data')
@@ -148,37 +150,33 @@ def detail_movies(request):
     crews_data = requests.get("%s?%s" % (url, params ), verify=False)
     crews_data = crews_data.json()
      ###   Lots of work to be done
+=======
+# ----------------------------------------------------------------------------------------------------------------------
+def detail_movies(request,movie_id):
 
-# code for information about ratings of the movie
-    rating = 'None'
-    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_ratings?id="+movie_id+"&country=US"
-    url = url.replace(" ", "")
-    rating_data = requests.get("%s?%s" % (url, params ), verify=False)
-    rating_data = rating_data.json()
- #   for ratings in rating_data['rating']:
- #       if ratings['rating']!='None':
-  #          rating = ratings['rating']
-  #      break
+    data = movie_detail(movie_id)
+    #return HttpResponse(json.dumps(data),content_type='application/json')
+    return render(request,'web/movie_detail.html',data)
 
-# code for getting related movie
-    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_related?id="+movie_id+"&relation=similar&in=en-US&in2=en-*&in3=*&page=1"
-    url = url.replace(" ", "")
-    sim_movie = []
-    data_similar_movie = requests.get("%s?%s" % (url, params ), verify=False)
-    data_similar_movie = data_similar_movie.json()
-    
-   # for similar_movies in data_similar_movie['related']:
-   #     dict_similar_movie={'title':similar_movies['content']['title'],'year':similar_movies['content']['year'],'id':similar_movies['content']['ref']['id']}
-#        sim_movie.append(dict_similar_movie)
+#----------------------------------------------------------------------------------------------------------------------
 
-# code for information about synopsis of movie
-    url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_synopses/best?id="+movie_id+"&length=short&length2=long&length3=plain&length4=extended&in=en-US&in2=en-*&in3=*"
-    url = url.replace(" ", "")
-    synopsys_data = requests.get("%s?%s" % (url, params ), verify=False)
-    synopsys_data = synopsys_data.json()
-    synopsys = synopsys_data['synopsis']['synopsis']
+def detail_series(request, series_id):
+>>>>>>> d57a3be53d0c0fbadf2f0d441c6ac1a16d31d99d
 
+    data = series_detail(series_id)
+    #return HttpResponse(json.dumps(data),content_type='application/json')
+    return render(request,'web/series_detail.html',data)
 
+#-----------------------------------------------------------------------------------------------------------------
+def list_episode(request,season_id):
+
+    data = episode_list(season_id)
+    return render(request,'web/list_episode.html',data)
+
+#----------------------------------------------------------------------------------------------------------------------
+def detail_episode(request,episode_id):
+
+<<<<<<< HEAD
     data = {'genre':genres,'year_of_release':year_of_release,'similar_movies':sim_movie,'name':name,'language':language,'fan_rating':fan_rating,'facebook_link':facebook,'duration':duration,"rating":rating,'synopsys':synopsys}
     return HttpResponse(json.dumps(data),content_type='application/json')
 
@@ -292,3 +290,7 @@ def detail_episode(request,episode_id):
     context = {'genre':genre,'name':title,'language':language,'synopsis':synopsis,'year':time,'duration':duration} 
     return render(request,'web/ep_details.html',context)
 
+=======
+    data = episode_detail(episode_id) 
+    return render(request,'web/ep_details.html',data)
+>>>>>>> d57a3be53d0c0fbadf2f0d441c6ac1a16d31d99d
