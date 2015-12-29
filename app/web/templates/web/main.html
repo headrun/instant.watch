@@ -76,8 +76,48 @@
                 </div>
               </div>
               <div class="items clearfix">
+              </div>
+            </div>
+          </div>
 
-                <script id = "movies_list" type = "template">
+          <div class="list-region list_region_series hide">
+            <div class="list">
+              <div class="spinner hide">
+                <div class="loading-container">
+                  <div class="ball"></div>
+                  <div class="ball1"></div>
+                </div>
+              </div>
+              <div class="items clearfix">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="settings-container"></div>
+<!-- movie details -->
+         <div id = "mv">
+         </div>
+<!-- series details -->
+         <div id="sr">
+         </div>
+<!--
+   <div id="file-selector-container"></div>
+   <div id="torrent-collection-container"></div>
+   <div id="drop-mask"></div>
+   <div class="drop-indicator top"></div>
+   <div class="drop-indicator right"></div>
+   <div class="drop-indicator left"></div>
+   <div class="drop-indicator bottom"></div>
+   <div id="player"></div>
+   </div></div>
+
+-->
+  </div> 
+</div>  
+
+<!-- movies list script  -->
+              <script id = "movies_list" type = "template">
                 <div class="item" data-id =" <%= id %>">
                   <img class="cover-image" src="/static/web/images/posterholder.png" />
                   <div class="cover">
@@ -104,24 +144,11 @@
                   <p class="seasons"></p>
                   <p id="movie_quality" class="seasons quality" style="display: block;"></p>
                 </div>
-                </script>
+              </script>
 
-              </div>
-            </div>
-          </div>
-
-          <div class="list-region list_region_series hide">
-            <div class="list">
-              <div class="spinner hide">
-                <div class="loading-container">
-                  <div class="ball"></div>
-                  <div class="ball1"></div>
-                </div>
-              </div>
-              <div class="items clearfix">
-
-                <script id = "series_list" type="template">
-                <div class="item" data-id = "id">
+<!-- series list script -->
+              <script id = "series_list" type="template">
+                <div class="item" data-id = "<%= id %>">
                   <img class="cover-image" src="/static/web/images/posterholder.png" />
                   <div class="cover">
                     <div class="cover-overlay">
@@ -148,15 +175,9 @@
                 </div>
                 </script>
 
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="settings-container"></div>
-<!-- movie details -->
+<!-- movie details  -->
         <script id="show_movie_details" type="template">
-        <div class="movie-detail hide">
+        <div id="<%= div %>" class="movie-detail hide">
           <div data-bgr="" class="backdrop"></div>
           <div class="backdrop-overlay"></div>
           <div class="fa fa-times close-icon"></div>
@@ -166,7 +187,7 @@
 
           <section class="content-box">
             <div class="meta-container">
-              <div class="title">movie</div>
+              <div class="title"><%= movie %></div>
               <div class="metadatas">
                 <div class="metaitem"><%= year %></div>
                 <div class="dot"></div>
@@ -228,24 +249,26 @@
         </div>
       </script>
 
-<!-- series details -->
+<!-- series details  -->
+
+
       <script id="series_detail" type="template">
-        <div class="shows-container-contain hide">
+        <div id="<%= div %>" class="shows-container-contain hide">
           <div class="fa fa-times close-icon"></div>
           <div class="tv-poster">
             <div data-bgr="" class="tv-poster-background">
               <div class="tv-poster-overlay"></div>
             </div>
-            <div data-bgr=">" class="tv-cover"></div>
+            <div data-bgr="" class="tv-cover"></div>
             <div class="tv-meta-data">
-              <div class="tv-title">Title</div>
-              <div class="tv-year"> 2015</div>
+              <div class="tv-title"><%= name %></div>
+              <div class="tv-year"> 1994</div>
               <div class="tv-dot"></div>
               <div class="tv-runtime"> 150 min</div>
               <div class="tv-dot"></div>
               <div class="tv-status"> undefined </div>
               <div class="tv-dot"></div>
-              <div class="tv-genre">action</div>
+              <div class="tv-genre"><%= genre %></div>
               <div class="tv-dot"></div>
               <div data-toggle="tooltip" data-placement="top" title="Open IMDb page" class="show-imdb-link"></div>
               <div class="tv-dot"></div>
@@ -260,7 +283,7 @@
                 </div>
                 <div class="number-container-tv hidden"> 4 <em>/10</em></div>
               </div>
-              <div class="tv-overview">a b c d e f g h i j k l m n o</div>
+              <div class="tv-overview"><%= synopsys %></div>
               <div class="favourites-toggle">Add to bookmarks</div>
               <div class="show-watched-toggle">Mark as Seen</div>
             </div>
@@ -332,19 +355,6 @@
           </div>
         </div>
       </script>
-<!--
-   <div id="file-selector-container"></div>
-   <div id="torrent-collection-container"></div>
-   <div id="drop-mask"></div>
-   <div class="drop-indicator top"></div>
-   <div class="drop-indicator right"></div>
-   <div class="drop-indicator left"></div>
-   <div class="drop-indicator bottom"></div>
-   <div id="player"></div>
-   </div></div>
 
--->
-  </div> 
-</div>  
 </body>
 </html>
