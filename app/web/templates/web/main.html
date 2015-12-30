@@ -213,7 +213,14 @@
 
               </div>
 
-              <div class="overview"><%= synopsis %></div>
+              <div class="overview"><%= synopsis %>
+              <div class="overview clearfix" style="border:2px solid #ff0000;" >
+                <ul>
+                    
+                    <li></li>
+                </ul>
+              </div>
+                </div>
             </div>
 
             <div class="bottom-container">
@@ -262,7 +269,7 @@
             <div data-bgr="" class="tv-cover"></div>
             <div class="tv-meta-data">
               <div class="tv-title"><%= name %></div>
-              <div class="tv-year"> 1994</div>
+              <div class="tv-year"> <%= year %></div>
               <div class="tv-dot"></div>
               <div class="tv-runtime"> 150 min</div>
               <div class="tv-dot"></div>
@@ -317,11 +324,9 @@
               <div class="tabs-base">
                 <div class="tabs-seasons">
                   <ul>
-                    <li class="tab-season" data-tab="season"><a>season1</a></li>
-                    <li class="tab-season" data-tab="season"><a>season2</a></li>
-                    <li class="tab-season" data-tab="season"><a>season3</a></li>
-                    <li class="tab-season" data-tab="season"><a>season4</a></li>
-                    <li class="tab-season" data-tab="season"><a>season5</a></li>
+                    <% _.each(season, function (item) { %>
+                    <li id = "season_<%= item.id %>" class="tab-season" data-tab="season"><a><%= item.title %></a></li>
+                    <% }) %>
                   </ul>
                 </div>
                 <div class="tabs-episodes">

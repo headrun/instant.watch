@@ -101,10 +101,11 @@ $(function(){
   /*series details */
   $("body").on("click",".list_region_series .item",function(){
     var id = parseInt($(this).attr("data-id"));
-    console.log(id)
-    series_details(id);
+    var year = $(this).children().eq(3).text();
+    console.log($(this).children().eq(3).text());
+    series_details(id,year);
   });
-  function series_details(id){
+  function series_details(id,year){
     var show = "#details"+"_"+id;
     var div_id = "details"+"_"+id;
     if( $(show).length > 0){
@@ -117,17 +118,17 @@ $(function(){
         url: "tvseries/"+id+"/",
         data: { "send_data":id,
               },
+        timeout: 15000,
         success: function(Data){
           console.log("success");
-          console.log(Data);
+          console.log(Data.seasons[1].title);
           var templateRawText = $("#series_detail").html();
           var compiledTemplate = _.template(templateRawText);
-          var templateResult = compiledTemplate({"name":Data.name,"synopsys":Data.synopsis,"div":div_id,"genre":Data.genre});
+          var templateResult = compiledTemplate({"name":Data.name,"year":year,"synopsys":Data.synopsis,"div":div_id,"genre":Data.genre,"season":Data.seasons});
           var x = $(templateResult);
           $(".list_region_series .spinner").addClass("hide");
           $("#sr").append(x);
           show_series_details();
-          console.log(x);
           }
         });
       }
@@ -138,6 +139,7 @@ $(function(){
   /* display movie_items  */
   function show_movies(){
     if ($(".list_region_movies .list .items .item").length > 0){
+      myFunction();
       $(".list_region_movies").removeClass("hide");
     } 
     else {
@@ -157,6 +159,7 @@ $(function(){
                   }
                   $(".list_region_movies .spinner").addClass("hide");
                   $(".display_items .list_region_movies .list .items").html(str);
+                  myFunction();
                 }
       });
     }
@@ -166,6 +169,7 @@ $(function(){
 /* series_list */
   function show_series(){
     if ($(".list_region_series .list .items .item").length > 0){
+      myFunction();
       $(".list_region_series").removeClass("hide");
       }
     else{
@@ -185,17 +189,13 @@ $(function(){
                      }
                      $(".list_region_series .spinner").addClass("hide");
                      $(".display_items .list_region_series .list .items").html(str);
+                     myFunction();
                      $(".list_region_series").removeClass("hide");
+                     console.log(Data);
                    }
       });
     }
     console.log("series shown");
   }
-//  var templateRawText = $("#movies_list").html();
-//  var compiledTemplate = _.template(templateRawText);
-//  var templateResult = compiledTemplate({name:"titanic","id":123,"year":1994});
-//  $(".display_items .list_region_movies .list .items").html(templateResult);
- // $(".display_items .list_region_series .list .items").html(templateResult);
-  myFunction();
 
  });
