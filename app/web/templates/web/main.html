@@ -194,42 +194,63 @@
                 <div class="metaitem"><%= duration %> min</div>
                 <div class="dot"></div>
                 <div class="metaitem"><%= genre %></div>
-                <div class="dot"></div>
-                <div data-toggle="tooltip" data-placement="top" title="Open IMDb page" class="movie-imdb-link"></div>
-                <div class="dot"></div>
-                <div class="rating-container">
-                  <div class="star-container" data-toggle="tooltip" data-placement="right" title="rating/10">
-                    <i class="fa fa-star rating-star"></i>
-                    <span class = "fa-stack rating-star-half-container">
-                      <i class="fa fa-star fa-stack-1x rating-star-half-empty"></i>
-                      <i class="fa fa-star-half fa-stack-1x rating-star-half"></i>
-                    </span>
-                    <i class="fa fa-star rating-star-empty"></i>
-                  </div>
-                  <div class="number-container hidden">7 <em>/10</em></div>
-                </div>
                 <div data-toggle="tooltip" data-placement="left" title="Health false class fa fa-circle health-icon health"></div>
-                <div data-toogle="tooltip" data-placement="left" title="Magnet link" class="fa fa-magnet magnet-link"></div>
 
               </div>
 
-              <div class="overview"><%= synopsis %>
-              <div class="overview clearfix" style="border:2px solid #ff0000;" >
+              <div class="overview" style = "height:100px"><%= synopsis %></div>
+              <div class="overview clearfix" style="border:1px solid white;overflow-y: scroll;" >
                 <ul>
-                    
-                    <li></li>
+                  <% _.each(avail, function (item) { %>
+                      <li id = "movie" style="padding-left:5px;"><%= item.source_id %>
+                      <ul class="list-inline pull-right">
+                        <li style="width:60px;"><%= item.purchase_type %></li>
+                        <li style="width:50px;"><%= item.quality%></li>
+                        <% if (item.price !== "") { %>
+                        <li style="width:100px;"><%=item.price%> <%= item.price_currency %></li>
+                        <% } %>
+                        <% if (item.price === "") { %>
+                        <li style="width:100px;">free</li>
+                        <% } %>
+                      </ul>
+                      </li>
+                  <% }) %>
+                 <% _.each(avail_ios, function (item) { %>
+                      <li id = "movie" style="padding-left:5px;"><%= item.source_id %>
+                      <ul class="list-inline pull-right">
+                        <li style="width:60px;"><%= item.purchase_type %></li>
+                        <li style="width:50px;"><%= item.quality%></li>
+                        <% if (item.price !== "") { %>
+                        <li style="width:100px;"><%=item.price%> <%= item.price_currency %></li>
+                        <% } %>
+                        <% if (item.price === "") { %>
+                        <li style="width:100px;">free</li>
+                        <% } %>
+                      </ul>
+                      </li>
+                  <% }) %>
+                  <% _.each(avail_android, function (item) { %>
+                      <li id = "movie" style="padding-left:5px;"><%= item.source_id %>
+                      <ul class="list-inline pull-right">
+                        <li style="width:60px;"><%= item.purchase_type %></li>
+                        <li style="width:50px;"><%= item.quality%></li>
+                        <% if (item.price !== "") { %>
+                        <li style="width:100px;"><%=item.price%> <%= item.price_currency %></li>
+                        <% } %>
+                        <% if (item.price === "") { %>
+                        <li style="width:100px;">free</li>
+                        <% } %>
+                      </ul>
+                      </li>
+                  <% }) %>
                 </ul>
-              </div>
                 </div>
             </div>
 
             <div class="bottom-container">
 
-              <div class="favourites-toggle">Add to bookmarks</div>
-              <div class="watched-toggle">Not Seen</div>
               <div class="sub-dropdown">
                 <div class="sub-flag-icon flag selected-lang none"></div>
-                <div class="sub-dropdown-arrow"></div>
               </div>                                            
               <div class="flag-container">
                 <div class="sub-flag-icon flag none" data-lang="none" title="Disabled"></div>
@@ -238,19 +259,6 @@
         
       <br>
         
-              <div class="button dropup" id="player-chooser"></div>
-              <div id="watch-trailer" class="button">Watch Trailer</div>
-              <div class="movie-quality-container">
-                <div class="q720">720p</div>
-                <div class="q1080">1080p</div>
-                <div class="quality switch white">
-                  <input data-toogle="tooltip" data-placement="top" title="720p - <br>1080p" >
-                  <input data-toogle="tooltip" data-placement="top" title="720p - <br>1080p - " type="radio" name="switch" id="switch-hd-on" checked >
-                  <span class="toggle"></span>
-                </div>
-                <div data-toogle="tooltip" data-placement="top" title="720p" class="q720">720p</div>
-                <div data-toogle="tooltip" data-placement="top" title="1080p" class="q720">1080p</div>
-              </div>
             </div>
           </section>
         </div>

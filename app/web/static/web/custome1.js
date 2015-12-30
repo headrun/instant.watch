@@ -85,13 +85,14 @@ $(function(){
               },
         success: function(Data){
                  console.log("success");
+                // console.log(Data.availability.availability.platform_availabilities.source_availabilities.source_id);
+                 console.log(Data.availability.availability.platform_availabilities[0].source_availabilities[0].price);
                  var templateRawText = $("#show_movie_details").html();
                  var compiledTemplate = _.template(templateRawText);
-                 var templateResult = compiledTemplate({"movie":Data.name,"year":Data.year_of_release,"duration":Data.duration,"genre":Data.genre,"synopsis":Data.synopsys,"div":div_id});
+                 var templateResult = compiledTemplate({"movie":Data.name,"year":Data.year_of_release,"duration":Data.duration,"genre":Data.genre,"synopsis":Data.synopsys,"div":div_id,"avail":Data.availability.availability.platform_availabilities[0].source_availabilities,"avail_ios":Data.availability.availability.platform_availabilities[1].source_availabilities,"avail_android":Data.availability.availability.platform_availabilities[2].source_availabilities});
                  var x = $(templateResult);
                  $("#mv").append(x);
                  $(".list_region_movies .spinner").addClass("hide");
-                 console.log(templateResult);
 
                  show_movie_details();
               }
@@ -121,7 +122,7 @@ $(function(){
         timeout: 15000,
         success: function(Data){
           console.log("success");
-          console.log(Data.seasons[1].title);
+          console.log(Data.seasons[1]);
           var templateRawText = $("#series_detail").html();
           var compiledTemplate = _.template(templateRawText);
           var templateResult = compiledTemplate({"name":Data.name,"year":year,"synopsys":Data.synopsis,"div":div_id,"genre":Data.genre,"season":Data.seasons});
