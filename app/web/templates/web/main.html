@@ -199,59 +199,17 @@
               </div>
 
               <div class="overview" style = "height:100px"><%= synopsis %></div>
-              <div class="overview clearfix" style="border:1px solid white;overflow-y: scroll;" >
-                <ul>
-                  <% _.each(avail, function (item) { %>
-                      <li id = "movie" style="padding-left:5px;"><%= item.source_id %>
-                      <ul class="list-inline pull-right">
-                        <li style="width:60px;"><%= item.purchase_type %></li>
-                        <li style="width:50px;"><%= item.quality%></li>
-                        <% if (item.price !== "") { %>
-                        <li style="width:100px;"><%=item.price%> <%= item.price_currency %></li>
-                        <% } %>
-                        <% if (item.price === "") { %>
-                        <li style="width:100px;">free</li>
-                        <% } %>
-                      </ul>
-                      </li>
-                  <% }) %>
-                 <% _.each(avail_ios, function (item) { %>
-                      <li id = "movie" style="padding-left:5px;"><%= item.source_id %>
-                      <ul class="list-inline pull-right">
-                        <li style="width:60px;"><%= item.purchase_type %></li>
-                        <li style="width:50px;"><%= item.quality%></li>
-                        <% if (item.price !== "") { %>
-                        <li style="width:100px;"><%=item.price%> <%= item.price_currency %></li>
-                        <% } %>
-                        <% if (item.price === "") { %>
-                        <li style="width:100px;">free</li>
-                        <% } %>
-                      </ul>
-                      </li>
-                  <% }) %>
-                  <% _.each(avail_android, function (item) { %>
-                      <li id = "movie" style="padding-left:5px;"><%= item.source_id %>
-                      <ul class="list-inline pull-right">
-                        <li style="width:60px;"><%= item.purchase_type %></li>
-                        <li style="width:50px;"><%= item.quality%></li>
-                        <% if (item.price !== "") { %>
-                        <li style="width:100px;"><%=item.price%> <%= item.price_currency %></li>
-                        <% } %>
-                        <% if (item.price === "") { %>
-                        <li style="width:100px;">free</li>
-                        <% } %>
-                      </ul>
-                      </li>
-                  <% }) %>
+              <div class="overview clearfix" style="border:1px solid white;overflow-y: scroll;">
+               <span class="loading_avail" style="text-align:center;font-size:30px;display:block;margin-top:12%;"><h1>Loading Availability ...</h1></span>
+               <ul class="availability">
                 </ul>
-                </div>
             </div>
 
             <div class="bottom-container">
 
               <div class="sub-dropdown">
                 <div class="sub-flag-icon flag selected-lang none"></div>
-              </div>                                            
+              </div>
               <div class="flag-container">
                 <div class="sub-flag-icon flag none" data-lang="none" title="Disabled"></div>
                 <div class="sub-flag-icon flag lang" data-lang="lang" title="nativeName"></div>
@@ -262,7 +220,43 @@
             </div>
           </section>
         </div>
+
       </script>
+
+<!-- Availability script -->
+
+<script id = "availability_script" type = "template">
+
+<% _.each(avail, function (platform) { %>
+
+<li><strong>Source id --- <%= platform.platform_id %> 
+  <ul class="list-inline pull-right">
+    <li style="width:150px;">Purchase Type </li>
+    <li style="width:100px;">Quality </li>
+    <li style="width:100px;">Price</li>
+  </ul>
+  </strong>
+</li>
+
+<% _.each(platform.source_availabilities, function (item) { %>
+  <li id = "movie" style="padding-left:5px;"><a href= <%= item.link.uri %>  target = "_blank"><%= item.source_id %></a>
+    <ul class="list-inline pull-right">
+      <li style="width:150px;"><%= item.purchase_type %></li>
+      <li style="width:100px;"><%= item.quality%></li>
+        <% if (item.price !== "") { %>
+          <li style="width:100px;"><%=item.price%> <%= item.price_currency %></li>
+        <% } %>
+        <% if (item.price === "") { %>
+          <li style="width:100px;">free</li>
+        <% } %>
+    </ul>
+  </li>
+<% }) %>
+<% }) %>
+
+</script>
+
+
 
 <!-- series details  -->
 
@@ -305,23 +299,8 @@
           </div>
 
           <div class="episode-base">
-            <div class="episode-info">
-              <div class="episode-info-title"></div>
-              <div class="episode-info-number"></div>
-              <div data-toggle="tooltip" data-placement="left" title="Health Unknown" class="fa fa-circle health-icon None"></div>
-              <div data-toggle="tooltip" data-placement="left" title="Magnet link" class="fa fa-magnet show-magnet-link"></div>
-              <div class="episode-info-date"></div>
-              <div class="episode-info-description"></div>
-              <div class="show-quality-container">
-                <div class="quality-selector">
-                  <div id="q480" class="q480">480p</div>
-                  <div id="q720" class="q720">720p</div>
-                  <div id="q1080" class="q1080">1080p</div>
-                </div>
-              </div>
-              <div class="movie-btn-watch-episode">
-                <div class="button dropup" id="player-chooser"></div>
-              </div>
+            <div class="episode-info" style="width:65%;">
+                <!-- episode details  -->
             </div>
 
             <div class="display-base-title">
@@ -338,17 +317,17 @@
                   </ul>
                 </div>
                 <div class="tabs-episodes">
-                  <div class="tab-episodes season">
+                  <div class="tab-episodes season show">
                     <ul>
-                      <li class="tab-episode" data-id="episodeData.tvdb_id">
+                      <li class="tab-episode" data-id="906208182">
                         <a href="#" class="episodeData">
-                          <span>1</span>
-                          <div><episode1</div>
+                          <span>Episode1</span>
+                          <div></div>
                         </a>
-                        <i id="watched" class="fa fa-eye watched">episode1</i>
+                        <i id="watched" class="fa fa-eye watched"></i>
 
 
-          <-- hidden template so we can save a DB query -->
+          <!-- hidden template so we can save a DB query -->
                         <div class="episodeData.tvdb_id" style="display:none">
                           <span class="title">episodeData.title</span>
                           <span class="date">first_aired</span>
@@ -368,6 +347,24 @@
           </div>
         </div>
       </script>
+<!-- Detail about episode  -->
+
+<script id = "episode_details" type = "template">
+ <div id= "episode_<%= id %>">
+ <div class="episode-info-title"><%= title %></div>
+   <div class="episode-info-number">
+     <ul class="list-inline">
+       <li><%= year %></li>
+       <li><%= lang %></li>
+       <li><%= duration %> min</li>
+       <li><%= genre %></li>
+     </ul>
+   </div>
+   <div class="episode-info-date"></div>
+   <div class="episode-info-description"><%= synopsys %></div>
+ </div> 
+ </div>
+</script>
 
 </body>
 </html>

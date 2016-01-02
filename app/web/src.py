@@ -96,7 +96,13 @@ def get_availability(id):
     i_dict = _get_deeplink_authtoken(rovi_id)
     deeplink_url = 'http://ottlinks.veveo.net/get_availability?%s' %(urllib.urlencode(i_dict))
     availability_response = requests.get(deeplink_url, verify=False)
-    return availability_response.json()
+    availability_resp = availability_response.json()
+    if availability_response.status_code == requests.codes.ok:
+        result =  {'error':0,'data': availability_resp }
+    else:
+        message = availability_response['problems'][0]['message']
+        result = {'error':1,'message':message}
+    return result
 
 
 # ---------------------------------------------------------------------------------------------------------
@@ -109,14 +115,16 @@ def trending_movies():
         return result
     else:
         resp = result['resp']
+        result = {'error':result['error']}
         movies = []
         for element in resp['items']:
             try:
-                dict1 = {'error':result['error'],'name':element['name'],'id':element['ref']['id'],'year':element['year'],'image': None}
+                dict1 = {'name':element['name'],'id':element['ref']['id'],'year':element['year'],'image': None}
                 movies.append(dict1)
             except:
                 pass
-        return movies
+        result.update({'movies':movies})
+        return result
 
 #----------------------------------------------------------------------------------------------------------
 # List of trending series
@@ -127,14 +135,16 @@ def trending_series():
         return result
     else:
         resp = result['resp']
+        result = {'error':result['error']}
         series = []
         for element in resp['items']:
             try:
-                dict1 = {'error':result['error'],'name':element['name'],'id':element['ref']['id'],'year':element['year'],'image':None}
+                dict1 = {'name':element['name'],'id':element['ref']['id'],'year':element['year'],'image':None}
                 series.append(dict1)
             except:
                 pass
-        return series
+        result.update({"series":series})
+        return result
 
 #-----------------------------------------------------------------------------------------------------------
 def movie_detail(movie_id):
@@ -142,9 +152,11 @@ def movie_detail(movie_id):
 
     url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie?id="+movie_id+"&in=en-US&in2=en-*&in3=*"
     result = check_response(url)
+
     if result['error']:
         return result
     else:
+        movie_details = {'error':result['error']}
         data_about_movie = result['resp']
         genres = data_about_movie.get('genres','Not Available')
         name = data_about_movie['title']
@@ -163,8 +175,8 @@ def movie_detail(movie_id):
         duration = (data_about_movie['runtime']/60)
 
  # code for information about cast of movie
-        casting = []
-        url ="https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_credits/cast?id="+movie_id+"&in=en-US&in2=en-*&in3=*&page=1&by=role"
+        #casting = []
+        #url ="https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_credits/cast?id="+movie_id+"&in=en-US&in2=en-*&in3=*&page=1&by=role"
         #result = check_response(url)
        # if result['error']:
          #   return result
@@ -174,9 +186,9 @@ def movie_detail(movie_id):
  #        casting.append(cast['person']['name'])
 
 # code for information about crew of the movie
-        crew = []
+        #crew = []
 
-        url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_credits/crew?id="+movie_id+"&in=en-US&in2=en-*&in3=*&page=1&by=type"
+        #url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_credits/crew?id="+movie_id+"&in=en-US&in2=en-*&in3=*&page=1&by=type"
         #result = check_response(url)
         #if result['error']:
          #   return result
@@ -197,8 +209,8 @@ def movie_detail(movie_id):
 #      break
 
 # code for getting related movie
-        url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_related?id="+movie_id+"&relation=similar&in=en-US&in2=en-*&in3=*&page=1"
-        sim_movie = []
+       # url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_related?id="+movie_id+"&relation=similar&in=en-US&in2=en-*&in3=*&page=1"
+       # sim_movie = []
        # result = check_response(url)
         #if result['error']:
          #   return result
@@ -210,6 +222,7 @@ def movie_detail(movie_id):
 # Information about synopsis of movie
         url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_movie_synopses/best?id="+movie_id+"&length=short&length2=long&length3=plain&length4=extended&in=en-US&in2=en-*&in3=*"
         result = check_response(url)
+
         if result['error']:
             pass
         else:
@@ -217,11 +230,12 @@ def movie_detail(movie_id):
             synopsys = synopsys_data['synopsis']['synopsis']
 
 # code for information about availability
-        availability_response = get_availability(movie_id)
+#        availability_response = get_availability(movie_id)
         
 
-    return {'error':result['error'],'genre':genres,'year_of_release':year_of_release,'name':name,'language':language,'fan_rating':fan_rating,'facebook_link':facebook,'duration':duration,'synopsys':synopsys,'availability': availability_response}
-
+        data = {'genre':genres,'year_of_release':year_of_release,'name':name,'language':language,'fan_rating':fan_rating,'facebook_link':facebook,'duration':duration,'synopsys':synopsys}
+        movie_details.update({'data':data})
+        return movie_details
 
 # -------------------------------------------------------------------------------------------------------
 def series_detail(series_id):
@@ -230,9 +244,11 @@ def series_detail(series_id):
  
     url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series?id="+ series_id+"&in=en-US&in2=en-*&in3=*"
     result = check_response(url)
+
     if result['error']:
         return result
     else:
+        series_details = {'error':result['error']}
         series_data = result['resp']
         title = series_data['title']
         language = series_data['in']
@@ -253,11 +269,11 @@ def series_detail(series_id):
     #    Getting info about Rating
     
         url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_ratings?id="+ series_id+"&country=US"
-        result = check_response(url)
-        if result['error']:
-            pass
-        else:
-            series_rating = result['resp']
+    #    result = check_response(url)
+    #    if result['error']:
+    #        pass
+    #    else:
+    #        series_rating = result['resp']
     #    rating = series_rating['rating'][0]['rating']
 
     # Getting synopsis of the series
@@ -284,23 +300,24 @@ def series_detail(series_id):
             except:
                 pass
 #    Getting info about casts
-        url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_credits/cast?id="+ series_id+"&page=1&by=role&by2=role&by3=role&by4=role&by5=role&in=en-US&in2=en-*&in3=*"
-        result = check_response(url)
-        if result['error']:
-            pass
-        else:
-            casts_data = result['resp']
+     #   url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_credits/cast?id="+ series_id+"&page=1&by=role&by2=role&by3=role&by4=role&by5=role&in=en-US&in2=en-*&in3=*"
+      #  result = check_response(url)
+     #   if result['error']:
+    #        pass
+    #    else:
+    #        casts_data = result['resp']
 
 #   Getting info about crews
-        url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_credits/crew?id="+ series_id+"&page=1&by=type&by2=type&by3=type&by4=type&by5=type&in=en-US&in2=en-*&in3=*"
-        result = check_response(url)
-        if result['error']:
-            pass
-        else:
-            crews_data = result['resp']
+     #   url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_series_credits/crew?id="+ series_id+"&page=1&by=type&by2=type&by3=type&by4=type&by5=type&in=en-US&in2=en-*&in3=*"
+    #    result = check_response(url)
+    #    if result['error']:
+     #       pass
+     #   else:
+      #      crews_data = result['resp']
 
-    return {'error':result['error'],'genre':genre,'name':title,'language':language,'synopsis':synopsis,'start':start_year,'end':end_year,'network':    network,'seasons':seasons}
-
+        data = {'genre':genre,'name':title,'language':language,'synopsis':synopsis,'start':start_year,'end':end_year,'network':    network,'seasons':seasons}
+        series_details.update({'data':data})
+        return series_details
 
 #------------------------------------------------------------------------------------------------------------------
 def episode_list(season_id):
@@ -340,7 +357,7 @@ def episode_detail(episode_id):
             return result
         else:
             synopsys_data = result['resp']
-            synopsis = synopsis_data['synopsis']['synopsis']
+            synopsis = synopsys_data['synopsis']['synopsis']
         
-        availability_response = get_availability(episode_id)
-        return {'error':result['error'],'genre':genre,'name':title,'language':language,'synopsis':synopsis,'year':time,'duration':duration,'availability':availability_response}
+       # availability_response = get_availability(episode_id)
+        return {'error':result['error'],'genre':genre,'name':title,'language':language,'synopsis':synopsis,'year':time,'duration':duration}

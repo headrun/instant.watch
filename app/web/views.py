@@ -47,7 +47,7 @@ def list_episode(request,season_id):
 #----------------------------------------------------------------------------------------------------------------------
 def detail_episode(request,episode_id):
     data = episode_detail(episode_id) 
-    return render(request,'web/ep_details.html',data)
+    return HttpResponse(json.dumps(data),content_type='application/json')
 
 #---------------------------------------------------------------------------------------------------------------------
 def availability(request, id):
