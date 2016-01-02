@@ -66,6 +66,7 @@ $(function(){
   $("body").on("click", ".list_region_movies .item",function(){
     var id = parseInt($(this).attr("data-id"));
     movie_details(id);
+    availability(id);
   });
 
 
@@ -90,7 +91,7 @@ $(function(){
                    $(".list_region_movies .spinner").addClass("hide");
   
                    show_movie_details();
-                   availability(id);
+         //          availability(id);
                    }
                  else{
                    $(".list_region_movies .spinner").addClass("hide");
@@ -242,7 +243,9 @@ $(function(){
            console.log(Data.name);
             var templateRawText = $("#episode_detail").html();
             var compiledTemplate = _.template(templateRawText);
-            var templateResult = compiledTemplate({"title":Data.name,"genre":Data.genre,"lang":Data.language,"synopsys":Data.synopsis,"duration":Data.duration,"year":Data.year,"id":id});
+            var templateResult = compiledTemplate({"title":Data.data.name,"genre":Data.data.genre,"lang":Data.data.language,"synopsys":Data.data.synopsis,"duration":Data.data.duration,"year":Data.data.year,"id":id});
+            var x = $(templateResult);
+            $(".episode-info").append(x);
             }
        });
      }

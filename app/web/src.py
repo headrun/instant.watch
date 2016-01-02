@@ -342,6 +342,7 @@ def episode_detail(episode_id):
     if result['error']:
         return result
     else:
+        episode_detail = {'error':result['error']}
         episode_data = result['resp']
         title = episode_data['title']
         language = episode_data['in']
@@ -354,10 +355,12 @@ def episode_detail(episode_id):
         url = "https://private-anon-defbcd4c1-rovicloudapi.apiary-proxy.com/api/v1/resolve/2/data_episode_synopses/best?id=9062081    82&length=short&length2=long&length3=plain&length4=extended&in=en-US&in2=en-*&in3=*"
         result = check_response(url)
         if result['error']:
-            return result
+            pass
         else:
             synopsys_data = result['resp']
             synopsis = synopsys_data['synopsis']['synopsis']
         
        # availability_response = get_availability(episode_id)
-        return {'error':result['error'],'genre':genre,'name':title,'language':language,'synopsis':synopsis,'year':time,'duration':duration}
+        data = {'error':result['error'],'genre':genre,'name':title,'language':language,'synopsis':synopsis,'year':time,'duration':duration}
+        episode_detail.update({'data': data})
+        return episode_detail
