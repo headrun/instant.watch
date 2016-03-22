@@ -1,0 +1,17 @@
+{
+  "name": "availability_service",
+  "version": "1.0.0",
+  "description": "Availability Service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "pamidi",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "mysql": "~2.9.0",
+    "underscore": "~1.8.3",
+    "deferred-js": "~1.0.2"
+  }
+}
